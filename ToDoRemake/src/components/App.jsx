@@ -1,13 +1,31 @@
 import React, {useState} from "react"
+import ToDoItem from "./ToDoItem";
 
 function App () {
 
-    const [inputText, setInputText] = useState("")
+    const [inputText, setInputText] = useState("");
+
+    const [items, setItems] = useState([])
 
     function handleChange(event) {
         const newValue = event.target.value
         setInputText(newValue)
     }
+
+    function addItem () {
+setItems((prevValue) => {
+return [...prevValue, inputText]
+})
+setInputText("")
+    }
+
+    function deleteItem(id) {
+        setItems((prevItems) => {
+          return prevItems.filter((item, index) => {
+            return index !== id;
+          });
+        });
+      }
 
     return (
         <div className="container">
@@ -15,14 +33,20 @@ function App () {
                 <h1>List of things to do</h1>
             </div>
             <div className="form">
-                <input type="text" value={inputText}/>
-                <button onClick={handleChange}>
+                <input onChange={handleChange} type="text" value={inputText}/>
+                <button onClick={addItem}>
                     <span>Add</span>
                     </button>
                     </div>
                     <div>
                         <ul>
-                            <li>An Item</li>
+                            {items.map((todoItem, index) => 
+                            <ToDoItem 
+                            key={index}
+                            id={index}
+                            text={todoItem}
+                            onChecked={deleteItem}
+                            />)}
                         </ul>
                     </div>
         </div>
